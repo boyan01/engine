@@ -157,6 +157,9 @@ bool TextInputModel::Backspace() {
     selection_ = TextRange(position - count);
     if (composing_) {
       composing_range_.set_end(composing_range_.end() - count);
+      if (composing_range_.collapsed()) {
+        EndComposing();
+      }
     }
     return true;
   }

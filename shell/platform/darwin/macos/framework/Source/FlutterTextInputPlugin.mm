@@ -389,6 +389,11 @@ static flutter::TextRange RangeFromBaseExtent(NSNumber* base,
   if (!_shown) {
     return NO;
   }
+  if (event.keyCode == 0x33) {
+    NSLog(@"on back space");
+    _activeModel->Backspace();
+    [self updateEditState];
+  }
   return [_textInputContext handleEvent:event];
 }
 
@@ -462,6 +467,8 @@ static flutter::TextRange RangeFromBaseExtent(NSNumber* base,
   if (_activeModel == nullptr) {
     return;
   }
+    
+  NSLog(@"insertText: %s", [string UTF8String]);
 
   if (range.location != NSNotFound) {
     // The selected range can actually have negative numbers, since it can start
@@ -523,6 +530,8 @@ static flutter::TextRange RangeFromBaseExtent(NSNumber* base,
   BOOL isAttributedString = [string isKindOfClass:[NSAttributedString class]];
   NSString* marked_text = isAttributedString ? [string string] : string;
   _activeModel->UpdateComposingText([marked_text UTF8String]);
+
+  NSLog(@"setMarkedText: %s, range: ", [marked_text UTF8String]);
 
   [self updateEditState];
 }
